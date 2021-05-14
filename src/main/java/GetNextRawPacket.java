@@ -2,8 +2,6 @@
 import com.sun.jna.Platform;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.JToggleButton;
@@ -17,14 +15,13 @@ import org.pcap4j.core.PcapNetworkInterface;
 import org.pcap4j.core.PcapNetworkInterface.PromiscuousMode;
 import org.pcap4j.core.PcapStat;
 import org.pcap4j.core.Pcaps;
-import org.pcap4j.util.ByteArrays;
 import org.pcap4j.util.NifSelector;
 
 @SuppressWarnings("javadoc")
 public class GetNextRawPacket /*extends Thread*/ {
 
   private static final String COUNT_KEY = GetNextRawPacket.class.getName() + ".count";
-  private static final int COUNT = Integer.getInteger(COUNT_KEY, 500);/*Cuantas tramas captura*/
+  private static final int COUNT = Integer.getInteger(COUNT_KEY, 20);/*Cuantas tramas captura*/
   
   private static final String READ_TIMEOUT_KEY = GetNextRawPacket.class.getName() + ".readTimeout";
   private static final int READ_TIMEOUT = Integer.getInteger(READ_TIMEOUT_KEY, 10); // [ms]
@@ -109,8 +106,8 @@ public class GetNextRawPacket /*extends Thread*/ {
     
   }
   
-  public void escuchaPaquetes(JTable tablaPaquetes) throws PcapNativeException, NotOpenException{
-      filter ="";
+  public void escuchaPaquetes(JTable tablaPaquetes,String filtro,int cantidad) throws PcapNativeException, NotOpenException{
+      filter =filtro;
       handle.setFilter(filter, BpfCompileMode.OPTIMIZE);
       /*int*/ num = 0;
     Object registro[]= new Object[5];
@@ -147,7 +144,7 @@ public class GetNextRawPacket /*extends Thread*/ {
         registro[4] = paquetesCapturados.get(index).tostrHora();
         model.addRow(registro);        
         num++;              
-        if (num >= COUNT /*|| tiempo>5000*/ /*num cap*/) {
+        if (num >= cantidad/*COUNT*/ /*|| tiempo>5000*/ /*num cap*/) {
           break;
         }
       }

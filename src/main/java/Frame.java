@@ -208,7 +208,7 @@ public class Frame extends javax.swing.JFrame {
         jTextField2.setText("Archivo de captura abierto...");
         jTextField2.setEnabled(false);
 
-        jButton1.setText("jButton1");
+        jButton1.setText("Cierra handle");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cerrarElHandle(evt);
@@ -402,6 +402,8 @@ public class Frame extends javax.swing.JFrame {
     private void iniPauseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_iniPauseActionPerformed
        
         if(iniPause.isSelected()){
+            /*Solo algo de estetica en botono de inicio y la etiqueta
+              de estatus de como va la captura*/
             estatus.setVisible(true);
             estatus.setText("Escuchando...");
             estatus.setBackground(new java.awt.Color(102, 255, 102));//Verde
@@ -409,9 +411,10 @@ public class Frame extends javax.swing.JFrame {
             iniPause.setText("Pausa");
             iniPause.setBackground(new java.awt.Color(255,153,153));//Rojo
             /*Aqui deberia de empezar a capturar paquetes*/
-            
+            filtroPaquetes = jTextField1.getText();//Obtiene el filtro de la caja de texto
+            int cantidadEscuchada = (int)cantidadSpin.getValue();
             try {
-                sniffer.escuchaPaquetes(jTable1);//sniffer.start();
+                sniffer.escuchaPaquetes(jTable1,filtroPaquetes,cantidadEscuchada);//sniffer.start();
             } catch (PcapNativeException ex) {
                 Logger.getLogger(Frame.class.getName()).log(Level.SEVERE, null, ex);
             } catch (NotOpenException ex) {
@@ -591,7 +594,8 @@ public class Frame extends javax.swing.JFrame {
     } 
 
     /*Son los botones, etiquetas, tabla, etc*/
-    private static GetNextRawPacket sniffer;     
+    private static GetNextRawPacket sniffer;
+    private static String filtroPaquetes;//Para guardar la cadena del filtro
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu aboutUs;
     private javax.swing.JMenuItem abrirArchivo;
