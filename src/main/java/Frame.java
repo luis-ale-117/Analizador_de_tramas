@@ -10,14 +10,8 @@ import org.pcap4j.core.NotOpenException;
 import org.pcap4j.core.PcapNativeException;
 
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/**
- *
- * @author lalex
+    Frame
+    GUI DEL PROGRAMA
  */
 public class Frame extends javax.swing.JFrame {
 
@@ -583,18 +577,13 @@ public class Frame extends javax.swing.JFrame {
             }
         });
         
-        /*Crea la ventana y la inicializa con los componentes*/
-       /* Frame app = new Frame();
-        app.setVisible(true);
-        app.setLocationRelativeTo(null);*///Para que aparezca en medio la pantalla
         
-        /*******************************/
         /* CREA EN SNIFFER  */
         sniffer = new GetNextRawPacket();
     } 
 
     /*Son los botones, etiquetas, tabla, etc*/
-    private static GetNextRawPacket sniffer;
+    private static GetNextRawPacket sniffer;//Para poder capturar las tramas
     private static String filtroPaquetes;//Para guardar la cadena del filtro
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu aboutUs;

@@ -2,14 +2,8 @@
 import org.pcap4j.util.ByteArrays;
 
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/**
- *
- * @author lalex
+    Arp
+    CLASE QUE NOS PERMITE ANALIZAR EL PROTOCOLO ARP
  */
 public class Arp {
     private byte[] macDestino;

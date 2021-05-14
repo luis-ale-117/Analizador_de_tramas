@@ -2,18 +2,8 @@
 import org.pcap4j.util.ByteArrays;
 
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-/**
- *
- * @author lalex
- */
-
-/*
- *  Estaria bien cambiarle el nombre algo como 
- *  iEEE802_3
+    Ieee
+    CLASE QUE NOS PERMITE ANALIZAR TRAMAS IEEE 802.3
  */
 public class Analizador {
 

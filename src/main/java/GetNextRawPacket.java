@@ -1,4 +1,4 @@
-/* interfaz 2*/
+
 import com.sun.jna.Platform;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -16,6 +16,12 @@ import org.pcap4j.core.PcapNetworkInterface.PromiscuousMode;
 import org.pcap4j.core.PcapStat;
 import org.pcap4j.core.Pcaps;
 import org.pcap4j.util.NifSelector;
+
+/*
+    GetNextRawPacket
+    CLASE QUE NOS PERMITE CAPTURAR PAQUETES
+    ESCOGIENDO CIERTA INTERFAZ
+*/
 
 @SuppressWarnings("javadoc")
 public class GetNextRawPacket /*extends Thread*/ {
@@ -118,20 +124,7 @@ public class GetNextRawPacket /*extends Thread*/ {
       byte[] packet = handle.getNextRawPacket();
       if (packet == null) {
         continue;
-      } else {
-        /*En consola*/
-        /*
-        System.out.println("====================================");
-        System.out.println(handle.getTimestamp());
-        //System.out.println(ByteArrays.toHexString(packet, " "));
-        for(int j=0;j<packet.length;j++){
-            System.out.printf("%02X ",packet[j]);
-            if((j+1)%16==0)
-                System.out.println("");
-        }//for
-        System.out.println("\n");
-        System.out.println("====================================");
-        */
+      } else {       
         /*En la GUI*/
         horaCaptura = handle.getTimestamp().toString();        
         paquetesCapturados.add(new Paquete(packet, horaCaptura,paquetesCapturados.size()));

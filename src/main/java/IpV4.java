@@ -7,13 +7,8 @@ import org.pcap4j.packet.IpV4Packet;
 import org.pcap4j.util.ByteArrays;
 
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-/**
- *
- * @author lalex
+    IpV4
+    CLASE QUE NOS PERMITE ANALIZAR EL PROTOCOLO IPv4
  */
 public class IpV4 {
 

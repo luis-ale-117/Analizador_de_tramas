@@ -2,14 +2,11 @@
 import org.pcap4j.util.ByteArrays;
 
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-/**
- *
- * @author lalex
- */
+    Paquete
+    CLASE QUE NOS PERMITE OBTENER UN PAQUETE Y GUARDAR SU
+    CONTENIDO PARA POSTERIORMENETE ANALIZARLO CON AYUDA DE
+    LAS DEMAS CLASES
+*/
 public class Paquete {
 
     private byte[] trama;
@@ -101,10 +98,6 @@ public class Paquete {
         int tipo_b2 = (trama[13]>=0)?trama[13]:trama[13]+256;
         int tipo = tipo_b1+tipo_b2;        
         tipo = trama[12]*255+trama[13];*/
-        StringBuilder sb = new StringBuilder();
-        sb.append(tram);
-        sb.append("hola");
-        sb.toString();
         int tipo = this.valorTipo();
         System.out.println(tipo);
         if (tipo < 1500) {//Si es IEEE 802.3 => 05 DB = 1499
