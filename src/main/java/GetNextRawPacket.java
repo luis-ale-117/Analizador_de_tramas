@@ -2,8 +2,6 @@
 import com.sun.jna.Platform;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.JToggleButton;
@@ -17,7 +15,6 @@ import org.pcap4j.core.PcapNetworkInterface;
 import org.pcap4j.core.PcapNetworkInterface.PromiscuousMode;
 import org.pcap4j.core.PcapStat;
 import org.pcap4j.core.Pcaps;
-import org.pcap4j.util.ByteArrays;
 import org.pcap4j.util.NifSelector;
 
 @SuppressWarnings("javadoc")
