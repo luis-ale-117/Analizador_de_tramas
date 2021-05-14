@@ -17,6 +17,7 @@ import org.pcap4j.util.ByteArrays;
  * @author lalex
  */
 public class Paquete {
+    private byte[] trama;
     private byte[] macDestino;
     private byte[] macOrigen;
     private byte[] tipoLong;
@@ -25,6 +26,7 @@ public class Paquete {
     private int id;
     
     public Paquete(byte[] trama,String horaCaptura, int index){
+        this.trama=trama;
         macDestino = new byte[6];
         macOrigen = new byte[6];
         tipoLong = new byte[2];
@@ -62,6 +64,11 @@ public class Paquete {
             extra[i-14] = trama[i];
         }
     }
+    private int valorTipo(){
+        int valor = tipoLong[1] & 255 ;
+        valor += ((tipoLong[0]& 255)*256);
+        return valor;
+    }
     
     public String tostrMacDestino(){
         return ByteArrays.toHexString(macDestino, "-");
@@ -85,13 +92,40 @@ public class Paquete {
               
     @Override
     public String toString(){
-        String tram;
+        String tram="";
         
-        tram = "Tiempo de captura: " + hora +"\n"
-                 + "Mac Destino: " + ByteArrays.toHexString(macDestino, "-") +"\n"
-                 + "Mac Origen: " + ByteArrays.toHexString(macOrigen, "-") +"\n"
-                 + "Tipo/Longitud: " + ByteArrays.toHexString(tipoLong, " ")+"\n"
-                 + "El resto de la trama:\n" + ByteArrays.toHexString(extra, " ")+"\n";                  
+        /*int tipo_b1 = (trama[12]>=0)?trama[12]*256:(trama[12]+25)*256;
+        int tipo_b2 = (trama[13]>=0)?trama[13]:trama[13]+256;
+        int tipo = tipo_b1+tipo_b2;        
+        tipo = trama[12]*255+trama[13];*/
+        int tipo = this.valorTipo();
+        System.out.println(tipo);
+        if(tipo<1500){//Si es IEEE 802.3 => 05 DB = 1499
+            Analizador analis = new Analizador();
+            analis.analizaTrama(trama);
+            tram+="IEEE\n"+analis.toString();
+        }else{
+            switch(tipo){
+                case (int)2048://Si es IP 08 00 = 2048
+                    IpV4 tramaIP = new IpV4();
+                    tramaIP.analizaTrama(trama);
+                    tram+="TRAMA DE PROTOCOLO IPv4\n"+tramaIP+"\n";
+                    break;            
+                case (int)2054://Si es ARP 08 06 = 2054
+                    Arp tramaArp = new Arp();
+                    tramaArp.analizaTrama(trama);
+                    tram+="TRAMA DE PROTOCOLO ARP\n"+tramaArp+"\n";
+                    break;
+                default:// Casos no contemplados
+                    tram+="TRAMA DE PROTOCOLO DESCONOCIDO ACTUALMENTE (NO ANALIZABLE) \n"
+                        + "MAC destino: "+this.tostrMacDestino()+"\n"
+                        + "MAC origen: "+this.tostrMacOrigen()+"\n"
+                        + "Tipo: "+this.tostrTipoLong()+"\n"
+                        + "El resto de la trama:\n" + ByteArrays.toHexString(extra, " ")+"\n";
+                    break;
+            }
+        }
+                         
         
         /*tramaARP = this.tostrMacDestino() +this.tostrMacOrigen() + this.tostrTipoLong()
                 + this.tostrExtra();*/

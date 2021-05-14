@@ -23,7 +23,7 @@ public class IpV4 {
     private int version;
     private int ihl;
     private IpV4Packet ipPacket;
-    
+
     public IpV4(){
         macDestino = new byte[6];
         macOrigen = new byte[6];
@@ -32,7 +32,7 @@ public class IpV4 {
         ihl = 0;
         ipPacket = null;
     }
-    
+
     public void analizaTrama(byte[] trama){
         this.getMacDestino(trama);
         this.getMacOrigen(trama);
@@ -42,11 +42,11 @@ public class IpV4 {
         this.getIpPacket(trama);
 
     }
-    
+
     public boolean esIPV4(byte b12,byte b13){
         return (b12&0xff)==8 && (b13&0xff)==0;
     }
-    
+
     private void getMacDestino(byte[] trama){
         for(int i = 0;i<6;i++){
             macDestino[i] = trama[i];
@@ -77,7 +77,7 @@ public class IpV4 {
         }
     }
 
-    
+
     private String tostrMacDestino(){
         String macDes = "Mac Destino: " + ByteArrays.toHexString(macDestino, "-") +"\n";
         return macDes;
@@ -98,31 +98,31 @@ public class IpV4 {
         int lt = /*(ipPacket.getHeader().getTotalLength()>0)?
                 ipPacket.getHeader().getTotalLength():ipPacket.getHeader().getTotalLength()+65536;*/
             ipPacket.getHeader().getTotalLengthAsInt();
-        
+
         int id= /*(ipPacket.getHeader().getIdentification()>0)?
                 ipPacket.getHeader().getIdentification():ipPacket.getHeader().getIdentification()+65536;*/
             ipPacket.getHeader().getIdentificationAsInt();
-        
+
         String dontFrag=(ipPacket.getHeader().getDontFragmentFlag())?"1":"0";
         String moreFrag=(ipPacket.getHeader().getMoreFragmentFlag())?"1":"0";
         String reserveFrag=(ipPacket.getHeader().getReservedFlag())?"1":"0";
         String flags = reserveFrag+dontFrag+moreFrag;
         String flagsMeaning = ("010".equals(flags))?"No fragmentar":"Fragmentar";
-        
+
         int fragOffset = ipPacket.getHeader().getFragmentOffset();
-        
+
         int ttl = ipPacket.getHeader().getTtlAsInt();
-        
+
         String protocolo = ipPacket.getHeader().getProtocol().valueAsString();
-        
+
         int checksum=ipPacket.getHeader().getHeaderChecksum();
-        
+
         String ipOrigen = ipPacket.getHeader().getSrcAddr().toString();
-        
+
         String ipDestino = ipPacket.getHeader().getDstAddr().toString();
-        
+
         String opciones =ipPacket.getHeader().getOptions().toString();        
-        
+
         String packInfo = "";
         packInfo+= "Version: "+ipPacket.getHeader().getVersion().valueAsString()+"\n"
                 + "IHL: "+ipPacket.getHeader().getIhlAsInt()+"\n"
@@ -137,10 +137,10 @@ public class IpV4 {
                 + "IP Origen: "+ ipOrigen+"\n"
                 + "IP Destino: "+ ipDestino+"\n"
                 + "Opciones: "+opciones+"\n";
-        
+
         return packInfo;
     }
-              
+
     @Override
     public String toString(){
         String tramaARP;
