@@ -5,7 +5,7 @@ import org.pcap4j.util.ByteArrays;
     Ieee
     CLASE QUE NOS PERMITE ANALIZAR TRAMAS IEEE 802.3
  */
-public class Analizador {
+public class Ieee {
 
     private byte[] macDestino;
     private byte[] macOrigen;
@@ -14,7 +14,7 @@ public class Analizador {
     private byte ssap;
     private byte[] control;
 
-    public Analizador() {
+    public Ieee() {
         macDestino = new byte[6];
         macOrigen = new byte[6];
         tipoLong = new byte[2];

@@ -42,9 +42,8 @@ public class Frame extends javax.swing.JFrame {
         tiempoSpin = new javax.swing.JSpinner(new SpinnerNumberModel(5,0,3600,1));
         jLabel3 = new javax.swing.JLabel();
         cantidadSpin = new javax.swing.JSpinner(new SpinnerNumberModel(1,0,20000,1));
-        iniPause = new javax.swing.JToggleButton();
+        inicioPausa = new javax.swing.JToggleButton();
         estatus = new javax.swing.JLabel();
-        ejemplo = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         scrollAnalisis = new javax.swing.JScrollPane();
@@ -125,22 +124,22 @@ public class Frame extends javax.swing.JFrame {
         cantidadSpin.setPreferredSize(new java.awt.Dimension(100, 30));
         jToolBar1.add(cantidadSpin);
 
-        iniPause.setBackground(new java.awt.Color(102, 255, 102));
-        iniPause.setText("Inicia");
-        iniPause.setEnabled(false);
-        iniPause.setFocusable(false);
-        iniPause.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        iniPause.setMaximumSize(new java.awt.Dimension(50, 50));
-        iniPause.setMinimumSize(new java.awt.Dimension(50, 40));
-        iniPause.setOpaque(true);
-        iniPause.setPreferredSize(new java.awt.Dimension(50, 40));
-        iniPause.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        iniPause.addActionListener(new java.awt.event.ActionListener() {
+        inicioPausa.setBackground(new java.awt.Color(102, 255, 102));
+        inicioPausa.setText("Inicia");
+        inicioPausa.setEnabled(false);
+        inicioPausa.setFocusable(false);
+        inicioPausa.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        inicioPausa.setMaximumSize(new java.awt.Dimension(50, 50));
+        inicioPausa.setMinimumSize(new java.awt.Dimension(50, 40));
+        inicioPausa.setOpaque(true);
+        inicioPausa.setPreferredSize(new java.awt.Dimension(50, 40));
+        inicioPausa.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        inicioPausa.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                iniPauseActionPerformed(evt);
+                inicioPausaActionPerformed(evt);
             }
         });
-        jToolBar1.add(iniPause);
+        jToolBar1.add(inicioPausa);
 
         jToolBar1.setOpaque(true);
 
@@ -149,13 +148,6 @@ public class Frame extends javax.swing.JFrame {
         estatus.setText("Escuchando...");
         estatus.setEnabled(true);
         estatus.setOpaque(true);
-
-        ejemplo.setText("Ejemplo");
-        ejemplo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                muestraEjemplo(evt);
-            }
-        });
 
         jTable1.setBackground(new java.awt.Color(255, 255, 153));
         jTable1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -222,9 +214,7 @@ public class Frame extends javax.swing.JFrame {
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(27, 27, 27)
                         .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(ejemplo)
-                        .addGap(18, 18, 18)
+                        .addGap(105, 105, 105)
                         .addComponent(jButton1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(estatus, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -241,7 +231,6 @@ public class Frame extends javax.swing.JFrame {
                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(estatus, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(ejemplo)
                     .addComponent(jButton1))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
@@ -326,12 +315,8 @@ public class Frame extends javax.swing.JFrame {
      ***********************************************
     ***********************************************/
     
-    /*Abre el explorador de archivos para abrir uno*/
+    /*ABRE EL EXPLORADOR DE ARCHIVOS PARA ESCOGER UN .PCAP Y DESPLEGARLO EN LA TABLA*/
     private void OpenFile(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OpenFile
-        /*JOptionPane.showMessageDialog(this,
-            "Abre y muestra un archivo",
-            "Abrir archivo",
-            JOptionPane.INFORMATION_MESSAGE);*/
         JFileChooser selectorArch = new JFileChooser();
         int respuesta = selectorArch.showOpenDialog(this);
         if(respuesta == JFileChooser.APPROVE_OPTION){
@@ -340,7 +325,7 @@ public class Frame extends javax.swing.JFrame {
         }        
     }//GEN-LAST:event_OpenFile
     
-    /*Muestra los integrantes del equipo*/
+    /*MUESTRA TODOS LOS INTEGRANTES DEL EQUIPO*/
     private void equipoInfo(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_equipoInfo
         JOptionPane.showMessageDialog(this,
             "Equipo:\n- Yo\n- Uriel\n- Jose\n- David",
@@ -348,7 +333,7 @@ public class Frame extends javax.swing.JFrame {
             JOptionPane.INFORMATION_MESSAGE);// TODO add your handling code here:
     }//GEN-LAST:event_equipoInfo
     
-    /*Guarda un archivo*/
+    /*GUARDA LOS PAQUETES CAPTURADOS DE LA TABLA EN UN ARCHIVO .PCAP*/
     private void guardaCapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_guardaCapActionPerformed
         /*JOptionPane.showMessageDialog(this,
             "Guarda los paquetes capturados en un\n Archivo .pcap",
@@ -363,107 +348,85 @@ public class Frame extends javax.swing.JFrame {
         }               
     }//GEN-LAST:event_guardaCapActionPerformed
     
-    /*Despliega las opciones para capturar paquetes por tiempo, por numero
-        o Sin limite y hasta que se detenga con el boton */
+    /*DESPLIEGA LAS OPCIONES DE CAPTURA DE PAQUETES*/
     private void opcionesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_opcionesActionPerformed
         /*Borra --Opciones-- cuando no se necesita*/
         if((String)opciones.getItemAt(0)=="--Opciones--")
                 opciones.removeItemAt(0);
         
         if((String)opciones.getSelectedItem()=="Tiempo"){
-            iniPause.setEnabled(true);
+            inicioPausa.setEnabled(true);
             tiempoSpin.setEnabled(true);
             cantidadSpin.setEnabled(false);            
         }
         else if((String)opciones.getSelectedItem()=="Cantidad"){
-            iniPause.setEnabled(true);
+            inicioPausa.setEnabled(true);
             tiempoSpin.setEnabled(false);
             cantidadSpin.setEnabled(true);            
         }
         else if((String)opciones.getSelectedItem()=="Sin limite"){
-            iniPause.setEnabled(true);
+            inicioPausa.setEnabled(true);
             tiempoSpin.setEnabled(false);
             cantidadSpin.setEnabled(false);            
         }
         else{
-            iniPause.setEnabled(false);
+            inicioPausa.setEnabled(false);
             tiempoSpin.setEnabled(false);
             cantidadSpin.setEnabled(false);
         }
     }//GEN-LAST:event_opcionesActionPerformed
     
-    /*Inicia y pausa la captura de paquetes*/
-    private void iniPauseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_iniPauseActionPerformed
+    /*INICIA O PAUSA LA CAPTURA DE PAQUETES DE ACUERDO A LAS OPCIONES SELECCIONADAS*/
+    private void inicioPausaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inicioPausaActionPerformed
        
-        if(iniPause.isSelected()){
-            /*Solo algo de estetica en botono de inicio y la etiqueta
-              de estatus de como va la captura*/
+        if(inicioPausa.isSelected()){
+            
             estatus.setVisible(true);
             estatus.setText("Escuchando...");
             estatus.setBackground(new java.awt.Color(102, 255, 102));//Verde
             
-            iniPause.setText("Pausa");
-            iniPause.setBackground(new java.awt.Color(255,153,153));//Rojo
-            /*Aqui deberia de empezar a capturar paquetes*/
-            filtroPaquetes = jTextField1.getText();//Obtiene el filtro de la caja de texto
-            int cantidadEscuchada = (int)cantidadSpin.getValue();
+            inicioPausa.setText("Pausa");
+            inicioPausa.setBackground(new java.awt.Color(255,153,153));//Rojo
+            
+            /*Inicializa las opciones para escuchar paquetes*/
+            filtroPaquetes = jTextField1.getText();//Obtiene el filtro de la caja de texto         
+            cantidadCapturar = (int)cantidadSpin.getValue();
+            
+            /*Comienza la captura de los paquetes*/
             try {
-                sniffer.escuchaPaquetes(jTable1,filtroPaquetes,cantidadEscuchada);//sniffer.start();
+                sniffer.escuchaPaquetes(jTable1,filtroPaquetes,cantidadCapturar);//sniffer.start();
             } catch (PcapNativeException ex) {
-                Logger.getLogger(Frame.class.getName()).log(Level.SEVERE, null, ex);
+                //Logger.getLogger(Frame.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("FILTRO MAL PUESTO :v");
             } catch (NotOpenException ex) {
                 Logger.getLogger(Frame.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            /*estatus.setText("Finalizado");
-            estatus.setBackground(new java.awt.Color(51,204,255));//Azul
-            iniPause.setText("Inicia");
-            iniPause.setBackground(new java.awt.Color(102, 255, 102));
-            iniPause.setSelected(false*/
-            
+            }            
         }
         else {
             estatus.setText("En pausa...");
             estatus.setBackground(new java.awt.Color(255,153,153));//Rojo
-            iniPause.setText("Inicia");
-            iniPause.setBackground(new java.awt.Color(102, 255, 102));//Verde
-            /*Aqui se debria de detener la captura*/
+            inicioPausa.setText("Inicia");
+            inicioPausa.setBackground(new java.awt.Color(102, 255, 102));//Verde
+            /*Aqui se debria de detener la captura (Falta aplicarlo)*/
         }
-    }//GEN-LAST:event_iniPauseActionPerformed
+    }//GEN-LAST:event_inicioPausaActionPerformed
       
-    /*Cierra un archivo abierto*/
+    /*DEBE CERRAR UN ARCHIVO .PACP ABIERTO*/
+    /*Si es seleccionado hasta ahora borraría todos los campos de la tabla (CORREGIR)*/
     private void cerrarArchivoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cerrarArchivoActionPerformed
-        /*JOptionPane.showMessageDialog(this,
-            "Cierra Archivo .pcap",
-            "Cerrar archivo",
-            JOptionPane.INFORMATION_MESSAGE);*/              
         jTextField2.setEnabled(false);
         analisis.setText("Analisis de paquetes...");
         jTable1.removeAll();
     }//GEN-LAST:event_cerrarArchivoActionPerformed
     
-    /*Muestra la información de un paquete capturado que se muestra en la
-        tabla*/
+    /*MUESTRA LA INFORMACION DEL ANALISIS DEL PAQUETE SELECIONADO EN LA TABLA*/    
     private void selecPaquete(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_selecPaquete
-        DefaultTableModel model = (DefaultTableModel)jTable1.getModel();// TODO add your handling code here:
-        int i = jTable1.getSelectedRow();
-        /*String aux = "ANALISIS DE LA TRAMA "+(i+1)+":\n"
-                +"- MAC DESTINO: "+model.getValueAt(i, 1).toString() + "\n"
-                +"- MAC ORIGEN: "+model.getValueAt(i, 2).toString() + "\n"
-                +"- TIPO: "+model.getValueAt(i, 3).toString() + "\n"
-                +"- TAMANO: "+model.getValueAt(i, 4).toString() + "\n"
-                +"- MAC DESTINO: "+model.getValueAt(i, 1).toString() + "\n"
-                +"- MAC ORIGEN: "+model.getValueAt(i, 2).toString() + "\n"
-                +"- TIPO: "+model.getValueAt(i, 3).toString() + "\n"
-                +"- TAMANO: "+model.getValueAt(i, 4).toString() + "\n"
-                +"== TRAMA EN CRUDO==\n"
-                +"00 00 00 00 00 00 00...";
-        */
-        
-        analisis.setText(sniffer.analisisTrama(i));
-        
+        DefaultTableModel model = (DefaultTableModel)jTable1.getModel();
+        int i = jTable1.getSelectedRow();                
+        analisis.setText(sniffer.analisisTrama(i));        
     }//GEN-LAST:event_selecPaquete
     
-    /*Informacion que se quiera mostrar de la aplicacion*/
+    /*INFO QUE SE QUIERA MOSTRAR DE LA APLICACION*/
     private void infoApp(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_infoApp
         JOptionPane.showMessageDialog(this,
             "Informacion de la aplicación",
@@ -471,14 +434,14 @@ public class Frame extends javax.swing.JFrame {
             JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_infoApp
     
-    /*Escoge la inferfaz para escuchar*/
+    /*ESCOGE LA INTERFAZ PARA CAPTURAR PAQUETES (por consola CORREGIR)*/
     private void interfazSelecActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_interfazSelecActionPerformed
         JOptionPane.showMessageDialog(this,
-            "Escoje tu interfaz",
+            "Escoje tu interfaz en consola",
             "Interfaz",
             JOptionPane.INFORMATION_MESSAGE);
         sniffer.setTable(jTable1);
-        sniffer.setBotonInicio(iniPause);
+        sniffer.setBotonInicio(inicioPausa);
         sniffer.setLabelEstatus(estatus);
         try {
             sniffer.selecInterfaz();
@@ -489,37 +452,9 @@ public class Frame extends javax.swing.JFrame {
         }               
         
     }//GEN-LAST:event_interfazSelecActionPerformed
-
-    /*Pone ejemplos en la tabla para checar como se veria*/
-    private void muestraEjemplo(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_muestraEjemplo
-        ArrayList<Paquete> listaPaquetes = new ArrayList<Paquete>(25);// TODO add your handling code here:
-        listaPaquetes.add(new Paquete(0,"FF-FF-FF-FF-FF-FF","DD-DD-DD-DD-DD-DD","Arp","12 bytes"));
-        listaPaquetes.add(new Paquete(1,"FF-FF-FF-FF-FF-FF","DD-DD-DD-DD-DD-DD","Arp","12 bytes"));
-        listaPaquetes.add(new Paquete(2,"FF-FF-FF-FF-FF-FF","DD-DD-DD-DD-DD-DD","Arp","12 bytes"));
-        listaPaquetes.add(new Paquete(3,"FF-FF-FF-FF-FF-FF","DD-DD-DD-DD-DD-DD","Arp","12 bytes"));
-        listaPaquetes.add(new Paquete(4,"FF-FF-FF-FF-FF-FF","DD-DD-DD-DD-DD-DD","Arp","12 bytes"));
-        listaPaquetes.add(new Paquete(5,"FF-FF-FF-FF-FF-FF","DD-DD-DD-DD-DD-DD","Arp","12 bytes"));
-        listaPaquetes.add(new Paquete(6,"FF-FF-FF-FF-FF-FF","DD-DD-DD-DD-DD-DD","Arp","12 bytes"));
-        listaPaquetes.add(new Paquete(7,"FF-FF-FF-FF-FF-FF","DD-DD-DD-DD-DD-DD","Arp","12 bytes"));
-        listaPaquetes.add(new Paquete(8,"FF-FF-FF-FF-FF-FF","DD-DD-DD-DD-DD-DD","Arp","12 bytes"));
-        listaPaquetes.add(new Paquete(9,"FF-FF-FF-FF-FF-FF","DD-DD-DD-DD-DD-DD","Arp","12 bytes"));
-        listaPaquetes.add(new Paquete(10,"FF-FF-FF-FF-FF-FF","DD-DD-DD-DD-DD-DD","Arp","12 bytes"));
-        listaPaquetes.add(new Paquete(11,"FF-FF-FF-FF-FF-FF","DD-DD-DD-DD-DD-DD","Arp","12 bytes"));
-
-        DefaultTableModel model = (DefaultTableModel)jTable1.getModel();
-        Object registro[] = new Object[5];
-        for(int i = 0;i<listaPaquetes.size();i++){
-            registro[0] = listaPaquetes.get(i).id;
-            registro[1] = listaPaquetes.get(i).macDestino;
-            registro[2] = listaPaquetes.get(i).macOrigen;
-            registro[3] = listaPaquetes.get(i).tipo;
-            registro[4] = listaPaquetes.get(i).tamano;
-            model.addRow(registro);
-        }
-    }//GEN-LAST:event_muestraEjemplo
-
+    
+    /*CIERRA EL HANDLE  (CORREGIR)*/
     private void cerrarElHandle(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cerrarElHandle
-       
         try {
             sniffer.cierraHandle();
         } catch (PcapNativeException ex) {
@@ -529,23 +464,8 @@ public class Frame extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_cerrarElHandle
 
-    /* PARA EJEMPLO DE COMO FUNCIONA LA TABLA*/
-    class Paquete{
-        int id=0;
-        String macOrigen;
-        String macDestino;
-        String tipo;
-        String tamano;
-
-        public Paquete(int id,String macOrigen, String macDestino, String Tipo, String Tamano) {
-            this.id = id;
-            this.macOrigen = macOrigen;
-            this.macDestino = macDestino;
-            this.tipo = Tipo;
-            this.tamano = Tamano;
-        }                        
-    }
     
+    /*EJECUTA LA GUI*/
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -578,26 +498,26 @@ public class Frame extends javax.swing.JFrame {
         });
         
         
-        /* CREA EN SNIFFER  */
+        /* CREA EL SNIFFER  */
         sniffer = new GetNextRawPacket();
     } 
 
     /*Son los botones, etiquetas, tabla, etc*/
     private static GetNextRawPacket sniffer;//Para poder capturar las tramas
     private static String filtroPaquetes;//Para guardar la cadena del filtro
+    private static int cantidadCapturar;//Para guardar la cadena del filtro
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu aboutUs;
     private javax.swing.JMenuItem abrirArchivo;
     private javax.swing.JTextArea analisis;
     private javax.swing.JSpinner cantidadSpin;
     private javax.swing.JMenuItem cerrarArchivo;
-    private javax.swing.JButton ejemplo;
     private javax.swing.JMenuItem equipo;
     private javax.swing.JLabel estatus;
     private javax.swing.JMenu file;
     private javax.swing.JMenuItem guardaCap;
     private javax.swing.JMenuItem info;
-    private javax.swing.JToggleButton iniPause;
+    private javax.swing.JToggleButton inicioPausa;
     private javax.swing.JButton interfazSelec;
     private javax.swing.JMenuBar jBaraComun;
     private javax.swing.JButton jButton1;

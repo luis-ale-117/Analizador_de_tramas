@@ -67,12 +67,12 @@ public class GetNextRawPacket /*extends Thread*/ {
     //String filter = args.length != 0 ? args[0] : "";
     filter = "";
     
-    System.out.println(COUNT_KEY + ": " + COUNT);
+    /*System.out.println(COUNT_KEY + ": " + COUNT);
     System.out.println(READ_TIMEOUT_KEY + ": " + READ_TIMEOUT);
     System.out.println(SNAPLEN_KEY + ": " + SNAPLEN);
     System.out.println(BUFFER_SIZE_KEY + ": " + BUFFER_SIZE);
     System.out.println(NIF_NAME_KEY + ": " + NIF_NAME);
-    System.out.println("\n");
+    System.out.println("\n");*/
 
     //PcapNetworkInterface nif;
     
@@ -143,13 +143,13 @@ public class GetNextRawPacket /*extends Thread*/ {
       }
     }
 
-    PcapStat ps = handle.getStats();
+    /*PcapStat ps = handle.getStats();
     System.out.println("ps_recv: " + ps.getNumPacketsReceived());
     System.out.println("ps_drop: " + ps.getNumPacketsDropped());
     System.out.println("ps_ifdrop: " + ps.getNumPacketsDroppedByIf());
     if (Platform.isWindows()) {
       System.out.println("bs_capt: " + ps.getNumPacketsCaptured());
-    }
+    }*/
     //handle.close();
     labelEstatus.setText("Finalizado");
       labelEstatus.setBackground(new java.awt.Color(51,204,255));//Azul

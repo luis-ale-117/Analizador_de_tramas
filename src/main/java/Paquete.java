@@ -101,7 +101,7 @@ public class Paquete {
         int tipo = this.valorTipo();
         System.out.println(tipo);
         if (tipo < 1500) {//Si es IEEE 802.3 => 05 DB = 1499
-            Analizador analis = new Analizador();
+            Ieee analis = new Ieee();
             analis.analizaTrama(trama);
             tram += "IEEE\n" + analis.toString();
         } else {
