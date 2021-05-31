@@ -13,7 +13,7 @@ public class Paquete {
     private byte[] macDestino;
     private byte[] macOrigen;
     private byte[] tipoLong;
-    private byte[] extra;
+    private byte[] extra;//Borrar
     private String hora;
     private int id;
 
