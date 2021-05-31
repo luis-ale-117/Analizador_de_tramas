@@ -94,10 +94,6 @@ public class Paquete {
     public String toString() {
         String tram = "";
 
-        /*int tipo_b1 = (trama[12]>=0)?trama[12]*256:(trama[12]+25)*256;
-        int tipo_b2 = (trama[13]>=0)?trama[13]:trama[13]+256;
-        int tipo = tipo_b1+tipo_b2;        
-        tipo = trama[12]*255+trama[13];*/
         int tipo = this.valorTipo();
         System.out.println(tipo);
         if (tipo < 1500) {//Si es IEEE 802.3 => 05 DB = 1499

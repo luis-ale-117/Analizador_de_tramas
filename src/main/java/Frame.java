@@ -330,7 +330,7 @@ public class Frame extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(this,
             "Equipo:\n- Yo\n- Uriel\n- Jose\n- David",
             "Info del equipo",
-            JOptionPane.INFORMATION_MESSAGE);// TODO add your handling code here:
+            JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_equipoInfo
     
     /*GUARDA LOS PAQUETES CAPTURADOS DE LA TABLA EN UN ARCHIVO .PCAP*/
@@ -392,15 +392,33 @@ public class Frame extends javax.swing.JFrame {
             filtroPaquetes = jTextField1.getText();//Obtiene el filtro de la caja de texto         
             cantidadCapturar = (int)cantidadSpin.getValue();
             
+            /*************************************/
             /*Comienza la captura de los paquetes*/
+            /*************************************/
             try {
-                sniffer.escuchaPaquetes(jTable1,filtroPaquetes,cantidadCapturar);//sniffer.start();
+                sniffer.inicializafiltro(filtroPaquetes);
+                /*Capruta paquetes SOLO SI el filtro es correcto*/
+                try {
+                    sniffer.escuchaPaquetes(jTable1,cantidadCapturar,(String)opciones.getSelectedItem());                    
+                } catch (PcapNativeException ex) {
+                    Logger.getLogger(Frame.class.getName()).log(Level.SEVERE, null, ex);                
+                } catch (NotOpenException ex) {
+                    Logger.getLogger(Frame.class.getName()).log(Level.SEVERE, null, ex);
+                }
             } catch (PcapNativeException ex) {
-                //Logger.getLogger(Frame.class.getName()).log(Level.SEVERE, null, ex);
-                System.out.println("FILTRO MAL PUESTO :v");
+                /*Si el filtro es incorrecto*/
+                estatus.setText("Finalizado");
+                estatus.setBackground(new java.awt.Color(51,204,255));//Azul
+                inicioPausa.setText("Inicia");
+                inicioPausa.setBackground(new java.awt.Color(102, 255, 102));//Verde
+                inicioPausa.setSelected(false);
+                JOptionPane.showMessageDialog(this,
+                "El filtro que colocaste es invalido\nPor favor, escoge otro.",
+                "Filtro Incorrecto",
+                JOptionPane.WARNING_MESSAGE);
             } catch (NotOpenException ex) {
                 Logger.getLogger(Frame.class.getName()).log(Level.SEVERE, null, ex);
-            }            
+            }                        
         }
         else {
             estatus.setText("En pausa...");

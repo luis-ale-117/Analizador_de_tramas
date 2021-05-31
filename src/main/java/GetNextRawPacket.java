@@ -112,8 +112,12 @@ public class GetNextRawPacket /*extends Thread*/ {
     
   }
   
-  public void escuchaPaquetes(JTable tablaPaquetes,String filtro,int cantidad) throws PcapNativeException, NotOpenException{
-      filter =filtro;
+  public void inicializafiltro(String fil)throws PcapNativeException, NotOpenException{
+      handle.setFilter(fil, BpfCompileMode.OPTIMIZE);
+  }
+  
+  public void escuchaPaquetes(JTable tablaPaquetes,int cantidad, String opcionSeleccionada) throws PcapNativeException, NotOpenException{
+      /*filter =filtro;
       handle.setFilter(filter, BpfCompileMode.OPTIMIZE);
       /*int*/ num = 0;
     Object registro[]= new Object[5];
@@ -143,18 +147,12 @@ public class GetNextRawPacket /*extends Thread*/ {
       }
     }
 
-    /*PcapStat ps = handle.getStats();
-    System.out.println("ps_recv: " + ps.getNumPacketsReceived());
-    System.out.println("ps_drop: " + ps.getNumPacketsDropped());
-    System.out.println("ps_ifdrop: " + ps.getNumPacketsDroppedByIf());
-    if (Platform.isWindows()) {
-      System.out.println("bs_capt: " + ps.getNumPacketsCaptured());
-    }*/
+    
     //handle.close();
-    labelEstatus.setText("Finalizado");
+      labelEstatus.setText("Finalizado");
       labelEstatus.setBackground(new java.awt.Color(51,204,255));//Azul
       botonInicio.setText("Inicia");
-      botonInicio.setBackground(new java.awt.Color(102, 255, 102));
+      botonInicio.setBackground(new java.awt.Color(102, 255, 102));//Verde
       botonInicio.setSelected(false);
   }
   
