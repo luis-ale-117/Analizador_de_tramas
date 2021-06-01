@@ -24,7 +24,7 @@ import org.pcap4j.util.NifSelector;
 */
 
 @SuppressWarnings("javadoc")
-public class GetNextRawPacket /*extends Thread*/ {
+public class GetNextRawPacket {
 
   private static final String COUNT_KEY = GetNextRawPacket.class.getName() + ".count";
   private static final int COUNT = Integer.getInteger(COUNT_KEY, 20);/*Cuantas tramas captura*/
@@ -63,7 +63,7 @@ public class GetNextRawPacket /*extends Thread*/ {
       tab = null;
   }
 
-  public /*static*/ void selecInterfaz(/*String[] args*/) throws PcapNativeException, NotOpenException {
+  public void selecInterfaz() throws PcapNativeException, NotOpenException {
     //String filter = args.length != 0 ? args[0] : "";
     filter = "";
     
@@ -99,31 +99,30 @@ public class GetNextRawPacket /*extends Thread*/ {
     }
     System.out.println("");
 
-    /*PcapHandle*/ handle =
+    handle =
         new PcapHandle.Builder(nif.getName())
             .snaplen(SNAPLEN)
             .promiscuousMode(PromiscuousMode.PROMISCUOUS)
             .timeoutMillis(READ_TIMEOUT)
             .bufferSize(BUFFER_SIZE)
             .build();
-
-    
-
-    
+ 
   }
   
   public void inicializafiltro(String fil)throws PcapNativeException, NotOpenException{
       handle.setFilter(fil, BpfCompileMode.OPTIMIZE);
   }
   
-  public void escuchaPaquetes(JTable tablaPaquetes,int cantidad, String opcionSeleccionada) throws PcapNativeException, NotOpenException{
-      /*filter =filtro;
-      handle.setFilter(filter, BpfCompileMode.OPTIMIZE);
-      /*int*/ num = 0;
+  public void escuchaPaquetes(JTable tablaPaquetes,int cantidad,int tiempo, String opcionSeleccionada) throws PcapNativeException, NotOpenException{
+    num = 0;
     Object registro[]= new Object[5];
     DefaultTableModel model = (DefaultTableModel)tablaPaquetes.getModel();
     String horaCaptura;
     int index;
+    int tiempoCaptura = tiempo*1000;//Llega en milisegundos
+    long tiempoInicio=System.currentTimeMillis();
+    long tiempoActual;
+    
     while (true) {
       byte[] packet = handle.getNextRawPacket();
       if (packet == null) {
@@ -140,10 +139,17 @@ public class GetNextRawPacket /*extends Thread*/ {
         registro[3] = paquetesCapturados.get(index).tostrTipoLong();
         registro[4] = paquetesCapturados.get(index).tostrHora();
         model.addRow(registro);        
-        num++;              
-        if (num >= cantidad/*COUNT*/ /*|| tiempo>5000*/ /*num cap*/) {
-          break;
-        }
+        num++;
+        if(opcionSeleccionada=="Cantidad"){
+            if (num >= cantidad) {
+                break;
+            }        
+        }else if(opcionSeleccionada=="Tiempo"){
+            tiempoActual = System.currentTimeMillis();
+            if((tiempoActual-tiempoInicio)>=tiempoCaptura){
+                break;
+            }
+        }            
       }
     }
 
@@ -172,21 +178,5 @@ public class GetNextRawPacket /*extends Thread*/ {
   public void setLabelEstatus(JLabel estatus){
       labelEstatus = estatus;
   }
-  /*
-  @Override
-  public void run(){
-      try {
-          this.escuchaPaquetes(tab);
-      } catch (PcapNativeException ex) {
-          Logger.getLogger(GetNextRawPacket.class.getName()).log(Level.SEVERE, null, ex);
-      } catch (NotOpenException ex) {
-          Logger.getLogger(GetNextRawPacket.class.getName()).log(Level.SEVERE, null, ex);
-      }
-      labelEstatus.setText("Finalizado");
-      labelEstatus.setBackground(new java.awt.Color(51,204,255));//Azul
-      botonInicio.setText("Inicia");
-      botonInicio.setBackground(new java.awt.Color(102, 255, 102));
-      botonInicio.setSelected(false);
-  }*/
   
 }

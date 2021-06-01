@@ -95,7 +95,6 @@ public class Paquete {
         String tram = "";
 
         int tipo = this.valorTipo();
-        System.out.println(tipo);
         if (tipo < 1500) {//Si es IEEE 802.3 => 05 DB = 1499
             Ieee analis = new Ieee();
             analis.analizaTrama(trama);

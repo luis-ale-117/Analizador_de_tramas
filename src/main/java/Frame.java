@@ -112,14 +112,12 @@ public class Frame extends javax.swing.JFrame {
         jLabel4.setText("  Tiempo (s)  ");
         jToolBar1.add(jLabel4);
 
-        tiempoSpin.setEnabled(false);
         tiempoSpin.setPreferredSize(new java.awt.Dimension(100, 30));
         jToolBar1.add(tiempoSpin);
 
         jLabel3.setText("  No.Captura  ");
         jToolBar1.add(jLabel3);
 
-        cantidadSpin.setEnabled(false);
         cantidadSpin.setMinimumSize(new java.awt.Dimension(50, 20));
         cantidadSpin.setPreferredSize(new java.awt.Dimension(100, 30));
         jToolBar1.add(cantidadSpin);
@@ -361,7 +359,7 @@ public class Frame extends javax.swing.JFrame {
         }
         else if((String)opciones.getSelectedItem()=="Cantidad"){
             inicioPausa.setEnabled(true);
-            tiempoSpin.setEnabled(false);
+            tiempoSpin.setEnabled(false);           
             cantidadSpin.setEnabled(true);            
         }
         else if((String)opciones.getSelectedItem()=="Sin limite"){
@@ -391,6 +389,7 @@ public class Frame extends javax.swing.JFrame {
             /*Inicializa las opciones para escuchar paquetes*/
             filtroPaquetes = jTextField1.getText();//Obtiene el filtro de la caja de texto         
             cantidadCapturar = (int)cantidadSpin.getValue();
+            tiempoCapturar = (int)tiempoSpin.getValue();
             
             /*************************************/
             /*Comienza la captura de los paquetes*/
@@ -399,7 +398,7 @@ public class Frame extends javax.swing.JFrame {
                 sniffer.inicializafiltro(filtroPaquetes);
                 /*Capruta paquetes SOLO SI el filtro es correcto*/
                 try {
-                    sniffer.escuchaPaquetes(jTable1,cantidadCapturar,(String)opciones.getSelectedItem());                    
+                    sniffer.escuchaPaquetes(jTable1,cantidadCapturar,tiempoCapturar,(String)opciones.getSelectedItem());                    
                 } catch (PcapNativeException ex) {
                     Logger.getLogger(Frame.class.getName()).log(Level.SEVERE, null, ex);                
                 } catch (NotOpenException ex) {
@@ -524,6 +523,7 @@ public class Frame extends javax.swing.JFrame {
     private static GetNextRawPacket sniffer;//Para poder capturar las tramas
     private static String filtroPaquetes;//Para guardar la cadena del filtro
     private static int cantidadCapturar;//Para guardar la cadena del filtro
+    private static int tiempoCapturar;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu aboutUs;
     private javax.swing.JMenuItem abrirArchivo;
