@@ -362,8 +362,9 @@ public class Frame extends javax.swing.JFrame {
             tiempoSpin.setEnabled(false);           
             cantidadSpin.setEnabled(true);            
         }
+        /*Sin implementacion actualmente*/
         else if((String)opciones.getSelectedItem()=="Sin limite"){
-            inicioPausa.setEnabled(true);
+            inicioPausa.setEnabled(false);
             tiempoSpin.setEnabled(false);
             cantidadSpin.setEnabled(false);            
         }
@@ -453,10 +454,6 @@ public class Frame extends javax.swing.JFrame {
     
     /*ESCOGE LA INTERFAZ PARA CAPTURAR PAQUETES (por consola CORREGIR)*/
     private void interfazSelecActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_interfazSelecActionPerformed
-        JOptionPane.showMessageDialog(this,
-            "Escoje tu interfaz en consola",
-            "Interfaz",
-            JOptionPane.INFORMATION_MESSAGE);
         sniffer.setTable(jTable1);
         sniffer.setBotonInicio(inicioPausa);
         sniffer.setLabelEstatus(estatus);

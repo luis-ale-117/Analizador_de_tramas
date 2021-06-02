@@ -12,8 +12,7 @@ public class Paquete {
     private byte[] trama;
     private byte[] macDestino;
     private byte[] macOrigen;
-    private byte[] tipoLong;
-    private byte[] extra;//Borrar
+    private byte[] tipoLong;    
     private String hora;
     private int id;
 
@@ -22,7 +21,6 @@ public class Paquete {
         macDestino = new byte[6];
         macOrigen = new byte[6];
         tipoLong = new byte[2];
-        extra = null;
         hora = horaCaptura;
         id = index;
         this.copiaTrama(trama);
@@ -32,7 +30,6 @@ public class Paquete {
         this.getMacDestino(trama);
         this.getMacOrigen(trama);
         this.getTipoLong(trama);
-        this.getExtra(trama);
     }
 
     private void getMacDestino(byte[] trama) {
@@ -50,13 +47,6 @@ public class Paquete {
     private void getTipoLong(byte[] trama) {
         for (int i = 12; i < 14; i++) {
             tipoLong[i - 12] = trama[i];
-        }
-    }
-
-    private void getExtra(byte[] trama) {
-        extra = new byte[trama.length - 14];
-        for (int i = 14; i < trama.length; i++) {
-            extra[i - 14] = trama[i];
         }
     }
 
@@ -80,10 +70,6 @@ public class Paquete {
 
     public String tostrHora() {
         return hora;
-    }
-
-    public String tostrExtra() {
-        return ByteArrays.toHexString(extra, " ");
     }
 
     public int tointId() {
@@ -118,7 +104,7 @@ public class Paquete {
                             + "MAC destino: " + this.tostrMacDestino() + "\n"
                             + "MAC origen: " + this.tostrMacOrigen() + "\n"
                             + "Tipo: " + this.tostrTipoLong() + "\n"
-                            + "El resto de la trama:\n" + ByteArrays.toHexString(extra, " ") + "\n";
+                            + "Trama completa:\n" + ByteArrays.toHexString(this.trama, " ") + "\n";
             }
         }
 

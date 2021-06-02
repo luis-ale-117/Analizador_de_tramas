@@ -2,7 +2,11 @@
 import com.sun.jna.Platform;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JToggleButton;
 import javax.swing.table.DefaultTableModel;
@@ -53,6 +57,7 @@ public class GetNextRawPacket {
   private JTable tab;
   private JToggleButton botonInicio;
   private JLabel labelEstatus;
+  private List<PcapNetworkInterface> allDevs;//Interfaces de Red
   
   public GetNextRawPacket() {
       filter = "";
@@ -61,51 +66,68 @@ public class GetNextRawPacket {
       handle = null;
       paquetesCapturados = new ArrayList<Paquete>(50);
       tab = null;
+      allDevs = null;
   }
 
   public void selecInterfaz() throws PcapNativeException, NotOpenException {
-    //String filter = args.length != 0 ? args[0] : "";
-    filter = "";
-    
-    /*System.out.println(COUNT_KEY + ": " + COUNT);
-    System.out.println(READ_TIMEOUT_KEY + ": " + READ_TIMEOUT);
-    System.out.println(SNAPLEN_KEY + ": " + SNAPLEN);
-    System.out.println(BUFFER_SIZE_KEY + ": " + BUFFER_SIZE);
-    System.out.println(NIF_NAME_KEY + ": " + NIF_NAME);
-    System.out.println("\n");*/
+        /********************************************/
+        /*PARA OBTENER INFO DE LAS INTERFACES DE RED*/
+        /********************************************/
+        
+        try {
+            allDevs = Pcaps.findAllDevs();
+        } catch (PcapNativeException e) {
+            try {
+                throw new IOException(e.getMessage());
+            } catch (IOException ex) {
+                Logger.getLogger(GetNextRawPacket.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        if (allDevs == null || allDevs.isEmpty()) {
+            try {
+                throw new IOException("No NIF to capture.");
+            } catch (IOException ex) {
+                Logger.getLogger(GetNextRawPacket.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        /*showNifList => Obten en String las interfaces */
+        StringBuilder sb = new StringBuilder(200);
+        String[] interfacesStr = new String[allDevs.size()];
+        
+        int nifIdx = 0;
+        for (PcapNetworkInterface nif : allDevs) {
+            sb.append("[").append(nifIdx).append("]: ").append(nif.getName());
+            if (nif.getDescription() != null) {
+                sb.append(" :Description: ").append(nif.getDescription());
+            }
+            interfacesStr[nifIdx] = sb.toString();
+            sb.delete(0, sb.length());
+            nifIdx++;
+        }
+        /*Hasta aqui se muestran todas las interfaces*/
+                                                
+        /*LO MINIMO PARA UN MENSAJE DE SELECCION CON OPCIONES*/
 
-    //PcapNetworkInterface nif;
-    
-    if (NIF_NAME != null) {
-      nif = Pcaps.getDevByName(NIF_NAME);
-    } else {
-      try {
-        nif = new NifSelector().selectNetworkInterface();
-      } catch (IOException e) {
-        e.printStackTrace();
-        return;
-      }
+        String entrada = (String) JOptionPane.showInputDialog(null, "Escoge una interfaz de red para iniciar la captura",
+                "Seleccion de interfaz" , JOptionPane.QUESTION_MESSAGE,null,interfacesStr,interfacesStr[0]);
+        if (entrada==null){
+            return;
+        }
+        /*doSelect => Selecciona la interfaz*/
 
-      if (nif == null) {
-        return;
-      }
-    }
-
-    System.out.println(nif.getName() + " (" + nif.getDescription() + ")");
-    for (PcapAddress addr : nif.getAddresses()) {
-      if (addr.getAddress() != null) {
-        System.out.println("IP address: " + addr.getAddress());
-      }
-    }
-    System.out.println("");
-
-    handle =
-        new PcapHandle.Builder(nif.getName())
-            .snaplen(SNAPLEN)
-            .promiscuousMode(PromiscuousMode.PROMISCUOUS)
-            .timeoutMillis(READ_TIMEOUT)
-            .bufferSize(BUFFER_SIZE)
-            .build();
+        int i;
+        int indiceNif=0;
+        for(i=0;i<allDevs.size();i++){
+            if(interfacesStr[i]==entrada)
+                indiceNif = i;
+        }
+        handle =
+            new PcapHandle.Builder(allDevs.get(indiceNif).getName())
+                .snaplen(SNAPLEN)
+                .promiscuousMode(PromiscuousMode.PROMISCUOUS)
+                .timeoutMillis(READ_TIMEOUT)
+                .bufferSize(BUFFER_SIZE)
+                .build();
  
   }
   
