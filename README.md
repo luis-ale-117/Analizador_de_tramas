@@ -5,6 +5,7 @@ intente asemejar algunas funcionalidades de WireShark. Actualmente:
 - La captura de tramas se puede filtrar paquetes de acuerdo a TCPDump
 - Los paquetes analizables pueden ser tipo IEEE 802.3 o Ethernet con protocolos ARP, IPv4
 - Se puede seleccionar la Interfaz de Red desde la GUI
+
 Falta:
 - Analizar las tramas desde un archivo .pcap
 - Guardar las tramas en un archivo .pcap
