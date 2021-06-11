@@ -112,12 +112,14 @@ public class Frame extends javax.swing.JFrame {
         jLabel4.setText("  Tiempo (s)  ");
         jToolBar1.add(jLabel4);
 
+        tiempoSpin.setEnabled(false);
         tiempoSpin.setPreferredSize(new java.awt.Dimension(100, 30));
         jToolBar1.add(tiempoSpin);
 
         jLabel3.setText("  No.Captura  ");
         jToolBar1.add(jLabel3);
 
+        cantidadSpin.setEnabled(false);
         cantidadSpin.setMinimumSize(new java.awt.Dimension(50, 20));
         cantidadSpin.setPreferredSize(new java.awt.Dimension(100, 30));
         jToolBar1.add(cantidadSpin);
@@ -191,6 +193,11 @@ public class Frame extends javax.swing.JFrame {
         jTextField2.setBackground(new java.awt.Color(255, 255, 204));
         jTextField2.setText("Archivo de captura abierto...");
         jTextField2.setEnabled(false);
+        jTextField2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField2ActionPerformed(evt);
+            }
+        });
 
         jButton1.setText("Cierra handle");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -320,7 +327,15 @@ public class Frame extends javax.swing.JFrame {
         if(respuesta == JFileChooser.APPROVE_OPTION){
             jTextField2.setText(selectorArch.getSelectedFile().getAbsolutePath());
             jTextField2.setEnabled(true);
-        }        
+            
+        }   
+        try {
+            read.leerArchivo(jTable1,jTextField2.getText());
+        } catch (PcapNativeException ex) {
+            Logger.getLogger(Frame.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NotOpenException ex) {
+            Logger.getLogger(Frame.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_OpenFile
     
     /*MUESTRA TODOS LOS INTEGRANTES DEL EQUIPO*/
@@ -440,8 +455,14 @@ public class Frame extends javax.swing.JFrame {
     /*MUESTRA LA INFORMACION DEL ANALISIS DEL PAQUETE SELECIONADO EN LA TABLA*/    
     private void selecPaquete(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_selecPaquete
         DefaultTableModel model = (DefaultTableModel)jTable1.getModel();
-        int i = jTable1.getSelectedRow();                
-        analisis.setText(sniffer.analisisTrama(i));        
+        int i = jTable1.getSelectedRow();             
+        try{
+            analisis.setText(sniffer.analisisTrama(i));
+        }catch(Exception e){
+            analisis.setText(read.analisisTrama(i));
+        }
+        
+        
     }//GEN-LAST:event_selecPaquete
     
     /*INFO QUE SE QUIERA MOSTRAR DE LA APLICACION*/
@@ -477,6 +498,10 @@ public class Frame extends javax.swing.JFrame {
             Logger.getLogger(Frame.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_cerrarElHandle
+
+    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField2ActionPerformed
 
     
     /*EJECUTA LA GUI*/
@@ -514,9 +539,11 @@ public class Frame extends javax.swing.JFrame {
         
         /* CREA EL SNIFFER  */
         sniffer = new GetNextRawPacket();
+        read = new ReadPacketFile();
     } 
 
     /*Son los botones, etiquetas, tabla, etc*/
+    private static ReadPacketFile read;
     private static GetNextRawPacket sniffer;//Para poder capturar las tramas
     private static String filtroPaquetes;//Para guardar la cadena del filtro
     private static int cantidadCapturar;//Para guardar la cadena del filtro
