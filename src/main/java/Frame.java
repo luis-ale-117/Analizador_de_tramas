@@ -100,8 +100,8 @@ public class Frame extends javax.swing.JFrame {
         jTextField1.setPreferredSize(new java.awt.Dimension(200, 30));
         jToolBar1.add(jTextField1);
 
-        opciones.setMaximumRowCount(4);
-        opciones.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "--Opciones--", "Tiempo", "Cantidad", "Sin limite" }));
+        opciones.setMaximumRowCount(3);
+        opciones.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Cantidad", "Tiempo", "Sin limite" }));
         opciones.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 opcionesActionPerformed(evt);
@@ -112,12 +112,14 @@ public class Frame extends javax.swing.JFrame {
         jLabel4.setText("  Tiempo (s)  ");
         jToolBar1.add(jLabel4);
 
+        tiempoSpin.setEnabled(false);
         tiempoSpin.setPreferredSize(new java.awt.Dimension(100, 30));
         jToolBar1.add(tiempoSpin);
 
         jLabel3.setText("  No.Captura  ");
         jToolBar1.add(jLabel3);
 
+        cantidadSpin.setEnabled(false);
         cantidadSpin.setMinimumSize(new java.awt.Dimension(50, 20));
         cantidadSpin.setPreferredSize(new java.awt.Dimension(100, 30));
         jToolBar1.add(cantidadSpin);
@@ -191,6 +193,11 @@ public class Frame extends javax.swing.JFrame {
         jTextField2.setBackground(new java.awt.Color(255, 255, 204));
         jTextField2.setText("Archivo de captura abierto...");
         jTextField2.setEnabled(false);
+        jTextField2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField2ActionPerformed(evt);
+            }
+        });
 
         jButton1.setText("Cierra handle");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -251,6 +258,7 @@ public class Frame extends javax.swing.JFrame {
         file.add(abrirArchivo);
 
         cerrarArchivo.setText("Cerrar Archivo");
+        cerrarArchivo.setEnabled(false);
         cerrarArchivo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cerrarArchivoActionPerformed(evt);
@@ -259,6 +267,7 @@ public class Frame extends javax.swing.JFrame {
         file.add(cerrarArchivo);
 
         guardaCap.setText("Guardar Captura");
+        guardaCap.setEnabled(false);
         guardaCap.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 guardaCapActionPerformed(evt);
@@ -320,7 +329,30 @@ public class Frame extends javax.swing.JFrame {
         if(respuesta == JFileChooser.APPROVE_OPTION){
             jTextField2.setText(selectorArch.getSelectedFile().getAbsolutePath());
             jTextField2.setEnabled(true);
-        }        
+            try {
+                /*Desactiva la opcion del sniffer hasta que se cierre el archivo*/
+                inicioPausa.setEnabled(false);
+                tiempoSpin.setEnabled(false);
+                cantidadSpin.setEnabled(false);
+                opciones.setEnabled(false);
+                /*Borra contenido de la tabla*/
+                DefaultTableModel model = (DefaultTableModel)jTable1.getModel();
+                model.setRowCount(0);
+                /*Lee el archivo y agrega su contenido a la tabla*/
+                read.leerArchivo(jTable1,jTextField2.getText());
+                /*Asigna los paquetes del read como los principales*/
+                paquetesPrincipales = read.getPaquetes();//Apunta a los paquetes del read
+                sniffer.clearArrayPaquetes();
+                
+            } catch (PcapNativeException ex) {
+                Logger.getLogger(Frame.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (NotOpenException ex) {
+                Logger.getLogger(Frame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            cerrarArchivo.setEnabled(true);
+            guardaCap.setEnabled(false);
+        }   
+        
     }//GEN-LAST:event_OpenFile
     
     /*MUESTRA TODOS LOS INTEGRANTES DEL EQUIPO*/
@@ -349,8 +381,8 @@ public class Frame extends javax.swing.JFrame {
     /*DESPLIEGA LAS OPCIONES DE CAPTURA DE PAQUETES*/
     private void opcionesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_opcionesActionPerformed
         /*Borra --Opciones-- cuando no se necesita*/
-        if((String)opciones.getItemAt(0)=="--Opciones--")
-                opciones.removeItemAt(0);
+        //if((String)opciones.getItemAt(0)=="--Opciones--")
+        //        opciones.removeItemAt(0);
         
         if((String)opciones.getSelectedItem()=="Tiempo"){
             inicioPausa.setEnabled(true);
@@ -398,13 +430,18 @@ public class Frame extends javax.swing.JFrame {
             try {
                 sniffer.inicializafiltro(filtroPaquetes);
                 /*Capruta paquetes SOLO SI el filtro es correcto*/
-                try {
-                    sniffer.escuchaPaquetes(jTable1,cantidadCapturar,tiempoCapturar,(String)opciones.getSelectedItem());                    
+                try {                    
+                    /*Captura los paquetes los muestra en la tabla*/
+                    sniffer.escuchaPaquetes(jTable1,cantidadCapturar,tiempoCapturar,(String)opciones.getSelectedItem());
+                    /*Asigna los paquetes del sniffer como los principales*/
+                    paquetesPrincipales = sniffer.getPaquetes();//Apunta a los paquetes del sniffer
                 } catch (PcapNativeException ex) {
                     Logger.getLogger(Frame.class.getName()).log(Level.SEVERE, null, ex);                
                 } catch (NotOpenException ex) {
                     Logger.getLogger(Frame.class.getName()).log(Level.SEVERE, null, ex);
                 }
+                cerrarArchivo.setEnabled(false);
+                guardaCap.setEnabled(true);
             } catch (PcapNativeException ex) {
                 /*Si el filtro es incorrecto*/
                 estatus.setText("Finalizado");
@@ -432,16 +469,31 @@ public class Frame extends javax.swing.JFrame {
     /*DEBE CERRAR UN ARCHIVO .PACP ABIERTO*/
     /*Si es seleccionado hasta ahora borraría todos los campos de la tabla (CORREGIR)*/
     private void cerrarArchivoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cerrarArchivoActionPerformed
+        /*Limpia la tabla y la etiqueta de archivo*/
+        jTextField2.setText("");
         jTextField2.setEnabled(false);
+        /*Borra contenido de la tabla*/
+        DefaultTableModel model = (DefaultTableModel)jTable1.getModel();
+        model.setRowCount(0);        
+        jTextField2.setEnabled(false);
+        /*Desactiva la opcion del sniffer hasta que se cierre el archivo*/
+        inicioPausa.setEnabled(true);
+        tiempoSpin.setEnabled(false);
+        cantidadSpin.setEnabled(true);
+        opciones.setEnabled(true);
+        cerrarArchivo.setEnabled(false);
+        guardaCap.setEnabled(false);
+        read.clearArrayPaquetes();
         analisis.setText("Analisis de paquetes...");
-        jTable1.removeAll();
     }//GEN-LAST:event_cerrarArchivoActionPerformed
     
     /*MUESTRA LA INFORMACION DEL ANALISIS DEL PAQUETE SELECIONADO EN LA TABLA*/    
     private void selecPaquete(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_selecPaquete
         DefaultTableModel model = (DefaultTableModel)jTable1.getModel();
-        int i = jTable1.getSelectedRow();                
-        analisis.setText(sniffer.analisisTrama(i));        
+        int i = jTable1.getSelectedRow();                     
+        analisis.setText(paquetesPrincipales.get(i).toString());
+        
+        
     }//GEN-LAST:event_selecPaquete
     
     /*INFO QUE SE QUIERA MOSTRAR DE LA APLICACION*/
@@ -477,6 +529,10 @@ public class Frame extends javax.swing.JFrame {
             Logger.getLogger(Frame.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_cerrarElHandle
+
+    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField2ActionPerformed
 
     
     /*EJECUTA LA GUI*/
@@ -514,13 +570,16 @@ public class Frame extends javax.swing.JFrame {
         
         /* CREA EL SNIFFER  */
         sniffer = new GetNextRawPacket();
+        read = new ReadPacketFile();
     } 
 
     /*Son los botones, etiquetas, tabla, etc*/
+    private static ReadPacketFile read;
     private static GetNextRawPacket sniffer;//Para poder capturar las tramas
     private static String filtroPaquetes;//Para guardar la cadena del filtro
     private static int cantidadCapturar;//Para guardar la cadena del filtro
     private static int tiempoCapturar;
+    private static ArrayList<Paquete> paquetesPrincipales;//Paquetes de la aplicación principal
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu aboutUs;
     private javax.swing.JMenuItem abrirArchivo;

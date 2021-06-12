@@ -87,24 +87,27 @@ public class Paquete {
             tram += "IEEE\n" + analis.toString();
         } else {
             switch (tipo) {
-                case (int) 2048 -> {
+                case (int) 2048: {
                     //Si es IP 08 00 = 2048
                     IpV4 tramaIP = new IpV4();
                     tramaIP.analizaTrama(trama);
                     tram += "TRAMA DE PROTOCOLO IPv4\n" + tramaIP + "\n";
+                    break;
                 }
-                case (int) 2054 -> {
+                case (int) 2054:{
                     //Si es ARP 08 06 = 2054
                     Arp tramaArp = new Arp();
                     tramaArp.analizaTrama(trama);
                     tram += "TRAMA DE PROTOCOLO ARP\n" + tramaArp + "\n";
+                    break;
                 }
-                default -> // Casos no contemplados
+                default: // Casos no contemplados
                     tram += "TRAMA DE PROTOCOLO DESCONOCIDO ACTUALMENTE (NO ANALIZABLE) \n"
                             + "MAC destino: " + this.tostrMacDestino() + "\n"
                             + "MAC origen: " + this.tostrMacOrigen() + "\n"
                             + "Tipo: " + this.tostrTipoLong() + "\n"
                             + "Trama completa:\n" + ByteArrays.toHexString(this.trama, " ") + "\n";
+                    break;
             }
         }
 
