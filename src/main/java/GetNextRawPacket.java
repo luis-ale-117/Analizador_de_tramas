@@ -64,7 +64,7 @@ public class GetNextRawPacket {
       num = 0;
       nif = null;
       handle = null;
-      paquetesCapturados = new ArrayList<Paquete>(50);
+      paquetesCapturados = new ArrayList<Paquete>(500);
       tab = null;
       allDevs = null;
   }
@@ -200,5 +200,11 @@ public class GetNextRawPacket {
   public void setLabelEstatus(JLabel estatus){
       labelEstatus = estatus;
   }
+  public ArrayList<Paquete> getPaquetes(){
+      return paquetesCapturados;
+  }
+  public void clearArrayPaquetes(){
+       paquetesCapturados.clear();
+   }
   
 }

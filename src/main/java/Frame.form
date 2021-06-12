@@ -23,6 +23,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="cerrarArchivo">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Cerrar Archivo"/>
+                <Property name="enabled" type="boolean" value="false"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cerrarArchivoActionPerformed"/>
@@ -31,6 +32,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="guardaCap">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Guardar Captura"/>
+                <Property name="enabled" type="boolean" value="false"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="guardaCapActionPerformed"/>
@@ -233,13 +235,12 @@
             </Component>
             <Component class="javax.swing.JComboBox" name="opciones">
               <Properties>
-                <Property name="maximumRowCount" type="int" value="4"/>
+                <Property name="maximumRowCount" type="int" value="3"/>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                  <StringArray count="4">
-                    <StringItem index="0" value="--Opciones--"/>
+                  <StringArray count="3">
+                    <StringItem index="0" value="Cantidad"/>
                     <StringItem index="1" value="Tiempo"/>
-                    <StringItem index="2" value="Cantidad"/>
-                    <StringItem index="3" value="Sin limite"/>
+                    <StringItem index="2" value="Sin limite"/>
                   </StringArray>
                 </Property>
               </Properties>

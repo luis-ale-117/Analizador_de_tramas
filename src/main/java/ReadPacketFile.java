@@ -18,7 +18,7 @@ public class ReadPacketFile {
     
   ReadPacketFile() {
       locacion="";
-      paquetesCapturados = new ArrayList<Paquete>(50);
+      paquetesCapturados = new ArrayList<Paquete>(500);
   }
 
   public void leerArchivo(JTable tablaPaquetes, String loc) throws PcapNativeException, NotOpenException {
@@ -60,4 +60,10 @@ public class ReadPacketFile {
    public String analisisTrama(int index){      
       return paquetesCapturados.get(index).toString();
   }
+   public ArrayList<Paquete> getPaquetes(){
+      return paquetesCapturados;
+  }
+   public void clearArrayPaquetes(){
+       paquetesCapturados.clear();
+   }
 }
