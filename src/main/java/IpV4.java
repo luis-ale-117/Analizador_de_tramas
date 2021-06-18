@@ -4,6 +4,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.pcap4j.packet.IllegalRawDataException;
 import org.pcap4j.packet.IpV4Packet;
+import org.pcap4j.packet.TcpPacket;
 import org.pcap4j.util.ByteArrays;
 
 /*
@@ -18,6 +19,7 @@ public class IpV4 {
     private int version;
     private int ihl;
     private IpV4Packet ipPacket;
+    private byte[] ipData;//Datos de los demas posibles protocolos
 
     public IpV4() {
         macDestino = new byte[6];
@@ -26,6 +28,7 @@ public class IpV4 {
         version = 0;
         ihl = 0;
         ipPacket = null;
+        ipData = null;
     }
 
     public void analizaTrama(byte[] trama) {
@@ -35,7 +38,7 @@ public class IpV4 {
         this.getVersion(trama);
         this.getIhl(trama);
         this.getIpPacket(trama);
-
+        this.getIpData(trama);
     }
 
     public boolean esIPV4(byte b12, byte b13) {
@@ -76,7 +79,10 @@ public class IpV4 {
             Logger.getLogger(IpV4.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
+    private void getIpData(byte[] trama){
+        this.ipData = Arrays.copyOfRange(trama, 14+ihl, trama.length);//Copia la trama original
+    }
+    
     private String tostrMacDestino() {
         String macDes = "Mac Destino: " + ByteArrays.toHexString(macDestino, "-") + "\n";
         return macDes;
@@ -124,7 +130,51 @@ public class IpV4 {
         String ipDestino = ipPacket.getHeader().getDstAddr().toString();
 
         String opciones = ipPacket.getHeader().getOptions().toString();
-
+        /******* Info del protocolo de transporte ********/
+        String packetData = "";
+        switch(ipPacket.getHeader().getProtocol().value().intValue()){//switch con el protocolo
+            case (int)2: {
+                // IGMP
+                IgmpV4Packet igmp = new IgmpV4Packet();
+                igmp.getIgmp(ipData);
+                packetData += igmp.toString();
+                break;
+            }
+            case (int)6: {
+                //TCP
+                StringBuilder tcpStr = new StringBuilder(20000);
+                tcpStr.append("  TCP Message\n");
+                try {
+                    TcpPacket tcp= TcpPacket.newPacket(ipData, 0, ipData.length);
+                    tcpStr.append("\tSource port: ").append(tcp.getHeader().getSrcPort().valueAsString()).append("\n");
+                    tcpStr.append("\tDestination port: ").append(tcp.getHeader().getDstPort().valueAsString()).append("\n");
+                    tcpStr.append("\tSequence number: ").append(tcp.getHeader().getSequenceNumberAsLong()).append("\n");
+                    tcpStr.append("\tAcknowledgement number: ").append(tcp.getHeader().getAcknowledgmentNumberAsLong()).append("\n");
+                    tcpStr.append("\tData offset: ").append(tcp.getHeader().getDataOffsetAsInt()).append("\n");
+                    tcpStr.append("\tReserved: ").append(tcp.getHeader().getReserved()).append("\n");
+                    tcpStr.append("\tFlags: Syn/").append(tcp.getHeader().getSyn())
+                        .append(" Fin/").append(tcp.getHeader().getFin())
+                        .append(" Rst/").append(tcp.getHeader().getRst())
+                        .append(" Ack/").append(tcp.getHeader().getAck())
+                        .append(" Psh/").append(tcp.getHeader().getPsh())
+                        .append(" Urg/").append(tcp.getHeader().getUrg())
+                        .append("\n");
+                    tcpStr.append("\tWindow size: ").append(tcp.getHeader().getWindowAsInt()).append("\n");
+                    tcpStr.append("\tChecksum: ").append(tcp.getHeader().getChecksum()).append("\n");
+                    tcpStr.append("\tUrgent pointer: ").append(tcp.getHeader().getUrgentPointerAsInt()).append("\n");
+                    tcpStr.append("\tOptions: ").append(tcp.getHeader().getOptions().toString()).append("\n");
+                } catch (IllegalRawDataException ex) {
+                    Logger.getLogger(IpV4.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                packetData+=tcpStr.toString();
+                break;
+            }
+            default: {
+                packetData+="Protocolo de la capa de transporte desconocido\n";
+                break;
+            }
+        }
+        
         String packInfo = "";
         packInfo += "Version: " + ipPacket.getHeader().getVersion().valueAsString() + "\n"
                 + "IHL: " + ipPacket.getHeader().getIhlAsInt() + "\n"
@@ -138,8 +188,8 @@ public class IpV4 {
                 + "Checksum: " + checksum + "\n"
                 + "IP Origen: " + ipOrigen + "\n"
                 + "IP Destino: " + ipDestino + "\n"
-                + "Opciones: " + opciones + "\n";
-
+                + "Opciones: " + opciones + "\n"
+                + "Packet Data: "+packetData+"\n";
         return packInfo;
     }
 
