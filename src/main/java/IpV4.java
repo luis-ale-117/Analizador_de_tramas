@@ -2,9 +2,9 @@
 import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.pcap4j.packet.IcmpV4CommonPacket;
 import org.pcap4j.packet.IllegalRawDataException;
 import org.pcap4j.packet.IpV4Packet;
-import org.pcap4j.packet.TcpPacket;
 import org.pcap4j.util.ByteArrays;
 
 /*
@@ -133,40 +133,28 @@ public class IpV4 {
         /******* Info del protocolo de transporte ********/
         String packetData = "";
         switch(ipPacket.getHeader().getProtocol().value().intValue()){//switch con el protocolo
+            case (int)1: {
+                //ICMP
+                StringBuilder icmpStr = new StringBuilder(20000);
+                icmpStr.append("  IGMP Message\n");
+                try {
+                    IcmpV4CommonPacket icmp = IcmpV4CommonPacket.newPacket(ipData, 0, ipData.length);
+                    icmpStr.append("\tType: ").append(icmp.getHeader().getType().valueAsString())
+                        .append("(").append(icmp.getHeader().getType().name()).append(")\n");
+                    icmpStr.append("\tCode: ").append(icmp.getHeader().getCode().valueAsString())
+                            .append("(").append(icmp.getHeader().getCode().name()).append(")\n");
+                    icmpStr.append("\tChecksum: ").append(icmp.getHeader().getChecksum()).append("\n");
+                } catch (IllegalRawDataException ex) {
+                    Logger.getLogger(IpV4.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                packetData+=icmpStr.toString();
+                break;
+            }
             case (int)2: {
                 // IGMP
                 IgmpV4Packet igmp = new IgmpV4Packet();
                 igmp.getIgmp(ipData);
                 packetData += igmp.toString();
-                break;
-            }
-            case (int)6: {
-                //TCP
-                StringBuilder tcpStr = new StringBuilder(20000);
-                tcpStr.append("  TCP Message\n");
-                try {
-                    TcpPacket tcp= TcpPacket.newPacket(ipData, 0, ipData.length);
-                    tcpStr.append("\tSource port: ").append(tcp.getHeader().getSrcPort().valueAsString()).append("\n");
-                    tcpStr.append("\tDestination port: ").append(tcp.getHeader().getDstPort().valueAsString()).append("\n");
-                    tcpStr.append("\tSequence number: ").append(tcp.getHeader().getSequenceNumberAsLong()).append("\n");
-                    tcpStr.append("\tAcknowledgement number: ").append(tcp.getHeader().getAcknowledgmentNumberAsLong()).append("\n");
-                    tcpStr.append("\tData offset: ").append(tcp.getHeader().getDataOffsetAsInt()).append("\n");
-                    tcpStr.append("\tReserved: ").append(tcp.getHeader().getReserved()).append("\n");
-                    tcpStr.append("\tFlags: Syn/").append(tcp.getHeader().getSyn())
-                        .append(" Fin/").append(tcp.getHeader().getFin())
-                        .append(" Rst/").append(tcp.getHeader().getRst())
-                        .append(" Ack/").append(tcp.getHeader().getAck())
-                        .append(" Psh/").append(tcp.getHeader().getPsh())
-                        .append(" Urg/").append(tcp.getHeader().getUrg())
-                        .append("\n");
-                    tcpStr.append("\tWindow size: ").append(tcp.getHeader().getWindowAsInt()).append("\n");
-                    tcpStr.append("\tChecksum: ").append(tcp.getHeader().getChecksum()).append("\n");
-                    tcpStr.append("\tUrgent pointer: ").append(tcp.getHeader().getUrgentPointerAsInt()).append("\n");
-                    tcpStr.append("\tOptions: ").append(tcp.getHeader().getOptions().toString()).append("\n");
-                } catch (IllegalRawDataException ex) {
-                    Logger.getLogger(IpV4.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                packetData+=tcpStr.toString();
                 break;
             }
             default: {
