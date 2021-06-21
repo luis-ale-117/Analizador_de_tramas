@@ -157,6 +157,14 @@ public class IpV4 {
                 packetData += igmp.toString();
                 break;
             }
+            case (int)6: {
+                //TCP
+                packetData+="  TCP Message\n";
+                TCP tcp = new TCP();
+                tcp.analisisTCP(ipData);
+                packetData += tcp.toString();
+                break;
+            }
             case (int)17: {
                 // UDP
                 packetData+="  UDP Message\n";
