@@ -55,6 +55,10 @@ public class Paquete {
         valor += ((tipoLong[0] & 255) * 256);
         return valor;
     }
+    
+    public byte[] returnTrama(){
+        return this.trama;
+    }
 
     public String tostrMacDestino() {
         return ByteArrays.toHexString(macDestino, "-");

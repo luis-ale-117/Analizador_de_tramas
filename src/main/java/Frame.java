@@ -7,6 +7,7 @@ import javax.swing.JOptionPane;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.table.DefaultTableModel;
 import org.pcap4j.core.NotOpenException;
+import org.pcap4j.core.PcapDumper;
 import org.pcap4j.core.PcapNativeException;
 
 /*
@@ -102,6 +103,7 @@ public class Frame extends javax.swing.JFrame {
 
         opciones.setMaximumRowCount(3);
         opciones.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Cantidad", "Tiempo", "Sin limite" }));
+        opciones.setEnabled(false);
         opciones.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 opcionesActionPerformed(evt);
@@ -365,17 +367,35 @@ public class Frame extends javax.swing.JFrame {
     
     /*GUARDA LOS PAQUETES CAPTURADOS DE LA TABLA EN UN ARCHIVO .PCAP*/
     private void guardaCapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_guardaCapActionPerformed
-        /*JOptionPane.showMessageDialog(this,
-            "Guarda los paquetes capturados en un\n Archivo .pcap",
-            "Guarda captura",
-            JOptionPane.INFORMATION_MESSAGE);*/
         JFileChooser selectorArch = new JFileChooser();
         int respuesta = selectorArch.showSaveDialog(this);
         /*Falta chechar que no se este escuchando al momento de guardar*/
         if(respuesta == JFileChooser.APPROVE_OPTION){
-            jTextField2.setText(selectorArch.getSelectedFile().getAbsolutePath());
-            jTextField2.setEnabled(true);
-        }               
+            PcapDumper dumper = null;
+            dumper = sniffer.createDumper(selectorArch.getSelectedFile().getAbsolutePath());
+            if(dumper == null){
+                JOptionPane.showMessageDialog(this,
+                "Ocurrió un error al guardar el archivo",
+                "Guardado fallido",
+                JOptionPane.ERROR_MESSAGE);
+            }else{
+                for(Paquete pack: paquetesPrincipales){
+                    try {
+                        dumper.dumpRaw(pack.returnTrama());
+                    } catch (NotOpenException ex) {
+                        Logger.getLogger(Frame.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                dumper.close();
+                JOptionPane.showMessageDialog(this,
+                "El archivo se guardo correctamente :)",
+                "¡Guardado exitoso!",
+                JOptionPane.INFORMATION_MESSAGE);
+            }
+            
+            cerrarArchivo.setEnabled(false);
+            guardaCap.setEnabled(true);
+        }
     }//GEN-LAST:event_guardaCapActionPerformed
     
     /*DESPLIEGA LAS OPCIONES DE CAPTURA DE PAQUETES*/
@@ -511,6 +531,9 @@ public class Frame extends javax.swing.JFrame {
         sniffer.setLabelEstatus(estatus);
         try {
             sniffer.selecInterfaz();
+            cantidadSpin.setEnabled(true);
+            opciones.setEnabled(true);
+            inicioPausa.setEnabled(true);
         } catch (PcapNativeException ex) {
             Logger.getLogger(Frame.class.getName()).log(Level.SEVERE, null, ex);
         } catch (NotOpenException ex) {

@@ -13,6 +13,7 @@ import javax.swing.table.DefaultTableModel;
 import org.pcap4j.core.BpfProgram.BpfCompileMode;
 import org.pcap4j.core.NotOpenException;
 import org.pcap4j.core.PcapAddress;
+import org.pcap4j.core.PcapDumper;
 import org.pcap4j.core.PcapHandle;
 import org.pcap4j.core.PcapNativeException;
 import org.pcap4j.core.PcapNetworkInterface;
@@ -205,6 +206,17 @@ public class GetNextRawPacket {
   }
   public void clearArrayPaquetes(){
        paquetesCapturados.clear();
-   }
+  }
+  public PcapDumper createDumper(String nomArchivo){
+      try {
+          return handle.dumpOpen(nomArchivo);
+      } catch (PcapNativeException ex) {
+          Logger.getLogger(GetNextRawPacket.class.getName()).log(Level.SEVERE, null, ex);
+          return null;
+      } catch (NotOpenException ex) {
+          Logger.getLogger(GetNextRawPacket.class.getName()).log(Level.SEVERE, null, ex);
+          return null;
+      }
+  }
   
 }
