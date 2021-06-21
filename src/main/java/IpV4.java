@@ -136,7 +136,7 @@ public class IpV4 {
             case (int)1: {
                 //ICMP
                 StringBuilder icmpStr = new StringBuilder(20000);
-                icmpStr.append("  IGMP Message\n");
+                icmpStr.append("  ICMP Message\n");
                 try {
                     IcmpV4CommonPacket icmp = IcmpV4CommonPacket.newPacket(ipData, 0, ipData.length);
                     icmpStr.append("\tType: ").append(icmp.getHeader().getType().valueAsString())
@@ -155,6 +155,13 @@ public class IpV4 {
                 IgmpV4Packet igmp = new IgmpV4Packet();
                 igmp.getIgmp(ipData);
                 packetData += igmp.toString();
+                break;
+            }
+            case (int)17: {
+                // UDP
+                packetData+="  UDP Message\n";
+                Udp udp = new Udp(ipData);
+                packetData += udp.toStrUdpPacket();
                 break;
             }
             default: {
