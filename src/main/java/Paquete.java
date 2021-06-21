@@ -75,10 +75,35 @@ public class Paquete {
     public int tointId() {
         return id;
     }
+    
+    private String tramaEnCrudo(){
+        StringBuilder crudo= new StringBuilder(150000);
+        int cantPaq16Bytes = trama.length/16;
+        byte[][] auxTrama = new byte[cantPaq16Bytes][16];//Para tener paquetitos de 16 bytes
+        byte[] auxTramaLineaFinal = new byte[trama.length-(cantPaq16Bytes*16)];//La ultima linea (varia su tamano en bytes)
+        
+        int j=0;
+        
+        for(int i=0;i<trama.length;i++){
+            if(j<cantPaq16Bytes){
+                auxTrama[j][i%16]=trama[i];
+                if((i+1)%16==0){
+                    crudo.append(ByteArrays.toHexString(auxTrama[j], " ")).append("\n");
+                    j++;
+                }
+            }else{
+                auxTramaLineaFinal[i%16] = trama[i];
+            }
+        }//for
+        if((trama.length-(cantPaq16Bytes*16))>0){
+            crudo.append(ByteArrays.toHexString(auxTramaLineaFinal, " ")).append("\n");
+        }
+        return crudo.toString();
+    }
 
     @Override
     public String toString() {
-        String tram = "";
+        String tram = "TRAMA EN CRUDO\n"+this.tramaEnCrudo()+"\n";
 
         int tipo = this.valorTipo();
         if (tipo < 1500) {//Si es IEEE 802.3 => 05 DB = 1499
@@ -105,8 +130,7 @@ public class Paquete {
                     tram += "TRAMA DE PROTOCOLO DESCONOCIDO ACTUALMENTE (NO ANALIZABLE) \n"
                             + "MAC destino: " + this.tostrMacDestino() + "\n"
                             + "MAC origen: " + this.tostrMacOrigen() + "\n"
-                            + "Tipo: " + this.tostrTipoLong() + "\n"
-                            + "Trama completa:\n" + ByteArrays.toHexString(this.trama, " ") + "\n";
+                            + "Tipo: " + this.tostrTipoLong() + "\n";
                     break;
             }
         }
