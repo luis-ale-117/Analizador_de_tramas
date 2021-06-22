@@ -103,7 +103,7 @@ public class Frame extends javax.swing.JFrame {
         jToolBar1.add(jTextField1);
 
         opciones.setMaximumRowCount(3);
-        opciones.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Cantidad", "Tiempo", "Sin limite" }));
+        opciones.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Cantidad", "Tiempo" }));
         opciones.setEnabled(false);
         opciones.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
