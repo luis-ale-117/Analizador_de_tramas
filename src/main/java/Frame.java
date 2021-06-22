@@ -50,12 +50,13 @@ public class Frame extends javax.swing.JFrame {
         scrollAnalisis = new javax.swing.JScrollPane();
         analisis = new javax.swing.JTextArea();
         jTextField2 = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
         jBaraComun = new javax.swing.JMenuBar();
         file = new javax.swing.JMenu();
         abrirArchivo = new javax.swing.JMenuItem();
         cerrarArchivo = new javax.swing.JMenuItem();
         guardaCap = new javax.swing.JMenuItem();
+        view = new javax.swing.JMenu();
+        estadistica = new javax.swing.JMenuItem();
         aboutUs = new javax.swing.JMenu();
         equipo = new javax.swing.JMenuItem();
         info = new javax.swing.JMenuItem();
@@ -201,13 +202,6 @@ public class Frame extends javax.swing.JFrame {
             }
         });
 
-        jButton1.setText("Cierra handle");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cerrarElHandle(evt);
-            }
-        });
-
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -221,8 +215,6 @@ public class Frame extends javax.swing.JFrame {
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(27, 27, 27)
                         .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(105, 105, 105)
-                        .addComponent(jButton1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(estatus, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(8, 8, 8))
@@ -237,8 +229,7 @@ public class Frame extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(estatus, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1))
+                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -278,6 +269,18 @@ public class Frame extends javax.swing.JFrame {
         file.add(guardaCap);
 
         jBaraComun.add(file);
+
+        view.setText("View");
+
+        estadistica.setText("Estadísticas");
+        estadistica.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                estadisticaActionPerformed(evt);
+            }
+        });
+        view.add(estadistica);
+
+        jBaraComun.add(view);
 
         aboutUs.setText("About");
 
@@ -520,7 +523,7 @@ public class Frame extends javax.swing.JFrame {
     private void infoApp(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_infoApp
         JOptionPane.showMessageDialog(this,
             "Informacion de la aplicación",
-            "Informacion",
+            "Sniffer que simula algunas características\nde WireShark",
             JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_infoApp
     
@@ -542,20 +545,18 @@ public class Frame extends javax.swing.JFrame {
         
     }//GEN-LAST:event_interfazSelecActionPerformed
     
-    /*CIERRA EL HANDLE  (CORREGIR)*/
-    private void cerrarElHandle(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cerrarElHandle
-        try {
-            sniffer.cierraHandle();
-        } catch (PcapNativeException ex) {
-            Logger.getLogger(Frame.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NotOpenException ex) {
-            Logger.getLogger(Frame.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }//GEN-LAST:event_cerrarElHandle
-
     private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField2ActionPerformed
+    
+    /************  GENERA LAS ESTADÍSTICAS  *************/
+    private void estadisticaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_estadisticaActionPerformed
+        int packTotales = paquetesPrincipales.size();
+        for(Paquete p: paquetesPrincipales){
+            
+        }
+                
+    }//GEN-LAST:event_estadisticaActionPerformed
 
     
     /*EJECUTA LA GUI*/
@@ -610,6 +611,7 @@ public class Frame extends javax.swing.JFrame {
     private javax.swing.JSpinner cantidadSpin;
     private javax.swing.JMenuItem cerrarArchivo;
     private javax.swing.JMenuItem equipo;
+    private javax.swing.JMenuItem estadistica;
     private javax.swing.JLabel estatus;
     private javax.swing.JMenu file;
     private javax.swing.JMenuItem guardaCap;
@@ -617,7 +619,6 @@ public class Frame extends javax.swing.JFrame {
     private javax.swing.JToggleButton inicioPausa;
     private javax.swing.JButton interfazSelec;
     private javax.swing.JMenuBar jBaraComun;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -631,5 +632,6 @@ public class Frame extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> opciones;
     private javax.swing.JScrollPane scrollAnalisis;
     private javax.swing.JSpinner tiempoSpin;
+    private javax.swing.JMenu view;
     // End of variables declaration//GEN-END:variables
 }
