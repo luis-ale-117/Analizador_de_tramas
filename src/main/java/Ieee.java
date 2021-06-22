@@ -79,8 +79,7 @@ public class Ieee {
         String tip;
         int valor = tipoLong[1] & 255;
         valor += ((tipoLong[0] & 255) * 256);
-        tip = "Tipo/Longitud: " + ByteArrays.toHexString(tipoLong, " ")
-                + " = " + valor + " en decimal\n" + "Tipo de trama: Ethernet Arp\n";
+        tip = "Longitud: " + valor +"\n";
         
         return tip;
     }
@@ -135,10 +134,10 @@ public class Ieee {
         if (valor > 3 && (control[0] & 3) != 3) {
             modo = 2;//Modo extendido
         }
-        for (int i = 0; i < modo; i++) {
+        /*for (int i = 0; i < modo; i++) {
             
             ctrl += control[i];
-        }
+        }*/
         
         for (int i = 0; i < modo; i++) {
             s1 = String.format("%8s", Integer.toBinaryString(control[i] & 0xFF)).replace(' ', '0');
