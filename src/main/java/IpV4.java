@@ -147,7 +147,7 @@ public class IpV4 {
                         .append("(").append(icmp.getHeader().getType().name()).append(")\n");
                     icmpStr.append("\tCode: ").append(icmp.getHeader().getCode().valueAsString())
                             .append("(").append(icmp.getHeader().getCode().name()).append(")\n");
-                    icmpStr.append("\tChecksum: ").append(icmp.getHeader().getChecksum()).append("\n");
+                    icmpStr.append("\tChecksum: ").append(icmp.getHeader().getChecksum()&65535).append("\n");
                 } catch (IllegalRawDataException ex) {
                     Logger.getLogger(IpV4.class.getName()).log(Level.SEVERE, null, ex);
                 }
