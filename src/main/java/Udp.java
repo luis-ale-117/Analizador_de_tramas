@@ -29,7 +29,7 @@ public class Udp {
         String origen = udpPacket.getHeader().getSrcPort().toString();
         String destino = udpPacket.getHeader().getDstPort().toString();
         int lon = udpPacket.getHeader().getLengthAsInt();
-        int crc = udpPacket.getHeader().getChecksum();
+        int crc = (udpPacket.getHeader().getChecksum()&65535);
         String datos = Arrays.toString(udpPacket.getHeader().getRawData());
         
         udp= "\tPueto Origen: "+ origen +"\n"

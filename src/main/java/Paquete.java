@@ -50,7 +50,7 @@ public class Paquete {
         }
     }
 
-    private int valorTipo() {
+    public int valorTipo() {
         int valor = tipoLong[1] & 255;
         valor += ((tipoLong[0] & 255) * 256);
         return valor;
@@ -138,9 +138,6 @@ public class Paquete {
                     break;
             }
         }
-
-        /*tramaARP = this.tostrMacDestino() +this.tostrMacOrigen() + this.tostrTipoLong()
-                + this.tostrExtra();*/
         return tram;
     }
 }

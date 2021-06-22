@@ -552,10 +552,83 @@ public class Frame extends javax.swing.JFrame {
     /************  GENERA LAS ESTADÍSTICAS  *************/
     private void estadisticaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_estadisticaActionPerformed
         int packTotales = paquetesPrincipales.size();
+        
+        int ieeeCant = 0;
+        int ethernetCant = 0;
+        
+        int ipv4Cant = 0;
+        int arpCant = 0;
+        
+        int icmpCant = 0;
+        int igmpCant = 0;
+        int tcpCant = 0;
+        int udpCant = 0;
+        
+        int othersCant = 0;
+        
         for(Paquete p: paquetesPrincipales){
-            
+            if (p.valorTipo() < 1500) {//IEEE
+                ieeeCant++;
+            } else {
+                ethernetCant++;
+                switch (p.valorTipo()) {
+                    case (int) 2048: {
+                        //IP
+                        ipv4Cant++;
+                        
+                        IpV4 tramaIP = new IpV4();
+                        tramaIP.analizaTrama(p.returnTrama());
+                        
+                        switch(tramaIP.returnProtocol()){
+                            case (int)1: {
+                                //ICMP
+                                icmpCant++;
+                                break;
+                            }
+                            case (int)2: {
+                                //IGMP
+                                igmpCant++;
+                                break;
+                            }
+                            case (int)6: {
+                                //TCP
+                                tcpCant++;
+                                break;
+                            }
+                            case (int)17: {
+                                //UDP
+                                udpCant++;
+                                break;
+                            }
+                        }
+                        
+                        break;
+                    }
+                    case (int) 2054:{
+                        //ARP
+                        arpCant++;
+                        break;
+                    }
+                    default: // Casos no contemplados
+                        othersCant++;
+                        break;
+                }
+            }
         }
-                
+        String estadisticas = "Total de paquetes capturados: "+packTotales+"\n"
+                + "IEEE 802.3: "+ieeeCant+"\n"
+                + "Ethernet: "+ethernetCant+"\n"
+                + "    ARP: "+arpCant+"\n"
+                + "    IPv4: "+ipv4Cant+"\n"
+                + "        ICMP: "+icmpCant +"\n"
+                + "        IGMP: "+igmpCant +"\n"
+                + "        TCP: "+tcpCant +"\n"
+                + "        UDP: "+udpCant +"\n"
+                + "    Otros: "+othersCant;
+        JOptionPane.showMessageDialog(this,
+                estadisticas,
+                "Estadísticas",
+                JOptionPane.INFORMATION_MESSAGE);  
     }//GEN-LAST:event_estadisticaActionPerformed
 
     

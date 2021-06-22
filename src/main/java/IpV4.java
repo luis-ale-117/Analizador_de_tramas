@@ -101,6 +101,10 @@ public class IpV4 {
                 + " = " + valor + "\nTipo de trama: Ethernet IPv4\n";
         return tip;
     }
+    
+    public int returnProtocol(){
+        return ipPacket.getHeader().getProtocol().value().intValue();
+    }
 
     private String tostrIpPacket() {
         int lt
